@@ -13,10 +13,10 @@ function createWindow() {
       webSecurity: false
     }
   })
+  mainWindow.setMenu(null)
 
   if (process.env.NODE_ENV === 'development') {
     mainWindow.loadURL(`http://localhost:4000`)
-    mainWindow.webContents.openDevTools()
   } else {
     mainWindow.loadURL(
       url.format({

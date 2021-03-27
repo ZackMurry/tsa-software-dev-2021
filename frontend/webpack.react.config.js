@@ -6,7 +6,7 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
     mainFields: ['main', 'module', 'browser']
   },
-  entry: './src/index.tsx',
+  entry: ['./src/index.tsx'],
   target: 'electron-renderer',
   devtool: 'source-map',
   module: {
@@ -17,6 +17,10 @@ module.exports = {
         use: {
           loader: 'babel-loader'
         }
+      },
+      {
+        test: /\.hbs$/,
+        loader: 'handlebars-loader'
       }
     ]
   },
@@ -32,5 +36,5 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'js/[name].js'
   },
-  plugins: [new HtmlWebpackPlugin()]
+  plugins: [new HtmlWebpackPlugin({ title: 'File Transfer', template: 'index.hbs' })]
 }
