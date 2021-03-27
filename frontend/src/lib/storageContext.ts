@@ -6,4 +6,4 @@ export interface StorageContext {
   updateStorage: (data: StorageData) => void
 }
 
-export const storageContext = createContext<StorageContext | null>(null)
+export const storageContext = createContext<StorageContext>({ storage: null, updateStorage: () => {} })

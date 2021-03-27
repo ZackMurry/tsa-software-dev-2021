@@ -1,4 +1,4 @@
-package Classes;
+package org.tsadrz;
 
 import java.io.Serializable;
 import java.util.List;

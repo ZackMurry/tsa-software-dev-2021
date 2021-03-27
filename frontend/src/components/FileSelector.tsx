@@ -1,15 +1,14 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
-import { Box, Flex, Input, Text } from '@chakra-ui/react'
+import React, { FC, RefObject, useEffect } from 'react'
+import { Flex, Text } from '@chakra-ui/react'
 const { dialog } = window.require('electron').remote
 import ApplicationButton from './ApplicationButton'
 
 interface Props {
-  onUpload: (path: string) => void
+  onSelect: (path: string) => void
+  dropRef: RefObject<HTMLDivElement>
 }
 
-const FileSelector: FC<Props> = ({ onUpload }) => {
-  const dropRef = useRef<HTMLDivElement>(null)
-
+const FileSelector: FC<Props> = ({ onSelect, dropRef }) => {
   const handleDrop = (e: DragEvent) => {
     e.preventDefault()
     if (!e.dataTransfer) {
@@ -17,7 +16,7 @@ const FileSelector: FC<Props> = ({ onUpload }) => {
     }
     const { files } = e.dataTransfer
     if (files && files.length) {
-      onUpload(files[0].path)
+      onSelect(files[0].path)
     }
   }
 
@@ -38,24 +37,22 @@ const FileSelector: FC<Props> = ({ onUpload }) => {
   const handleFileSelectClick = () => {
     const files = dialog.showOpenDialogSync({ properties: ['openFile'] })
     if (files && files.length) {
-      onUpload(files[0])
+      onSelect(files[0])
     }
   }
 
   return (
-    <Flex p='15px' borderRadius='15px' bg='mono.200' ref={dropRef} justifyContent='center' alignItems='center'>
-      <Box pt='40px' pb='40px' w='100%' borderRadius='15px' borderColor='mono.300' borderStyle='dashed' borderWidth='1px'>
-        <Text fontWeight='bold' textAlign='center'>
-          Drop a file
-        </Text>
-        <Text textAlign='center'>or</Text>
-        <Flex justifyContent='center' mt='5px'>
-          <ApplicationButton size='sm' onClick={handleFileSelectClick}>
-            Select a file
-          </ApplicationButton>
-        </Flex>
-      </Box>
-    </Flex>
+    <>
+      <Text fontWeight='bold' textAlign='center'>
+        Drop a file
+      </Text>
+      <Text textAlign='center'>or</Text>
+      <Flex justifyContent='center' mt='5px'>
+        <ApplicationButton size='sm' onClick={handleFileSelectClick}>
+          Select a file
+        </ApplicationButton>
+      </Flex>
+    </>
   )
 }
 

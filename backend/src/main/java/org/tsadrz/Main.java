@@ -1,4 +1,4 @@
-import Classes.Settings;
+package org.tsadrz;
 
 import java.io.*;
 

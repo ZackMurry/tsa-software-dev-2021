@@ -1,3 +1,5 @@
+package org.tsadrz;
+
 public class UserDetails {
 
     private String id;

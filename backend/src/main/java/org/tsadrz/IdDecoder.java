@@ -1,3 +1,5 @@
+package org.tsadrz;
+
 import java.util.Base64;
 
 public class IdDecoder {
@@ -15,7 +17,7 @@ public class IdDecoder {
         if (parts.length != 2) {
             throw new IllegalArgumentException("An id should contain an @ symbol");
         }
-        return new UserDetails(id, parts[0], parts[1]);
+        return new UserDetails(id, parts[1], parts[0]);
     }
 
 }
