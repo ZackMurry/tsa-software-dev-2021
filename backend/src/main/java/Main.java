@@ -1,8 +1,6 @@
-import Classes.Contact;
 import Classes.Settings;
 
 import java.io.*;
-import java.util.List;
 
 public class Main {
 
@@ -28,14 +26,10 @@ public class Main {
             settings = (Settings) ois.readObject();
             ois.close();
 
-        } catch (FileNotFoundException e) { //Possible exception from FileInputStream
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) { //Possible exception from ObjectInputStream
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) { //Possible class not found exception LOL
-            e.printStackTrace();
+            throw new RuntimeException("Error loading settings: " + e.getMessage(), e);
         }
-
 
     }
 
