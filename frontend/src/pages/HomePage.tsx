@@ -7,6 +7,7 @@ import ApplicationInput from '../components/ApplicationInput'
 import ContactInformation from '../components/ContactInformation'
 import { storageContext } from '../lib/storageContext'
 import FileUploadForm from '../components/FileUploadForm'
+import FileDownloadListener from '../components/FileDownloadListener'
 
 const HomePage: FC = () => {
   const { storage, updateStorage } = useContext(storageContext)
@@ -20,6 +21,7 @@ const HomePage: FC = () => {
         <ContactInformation name='Raghav Bansal' code='6453893131' />
       </Box>
       <FileUploadForm />
+      <FileDownloadListener />
     </Box>
   )
 }

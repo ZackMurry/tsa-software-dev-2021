@@ -15,6 +15,7 @@ const FileUploadForm: FC = () => {
 
   const handleShare = () => {
     setShareState('starting')
+    // todo this is hard-coded
     const child = spawn('java', ['-jar', '/home/zack/tsa-software-dev-2021/backend/target/backend-1.0-SNAPSHOT.jar'])
     child.stdout.on('data', data => {
       console.log(`child: ${data}`)
