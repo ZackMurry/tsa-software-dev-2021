@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron'
 import * as path from 'path'
 import * as url from 'url'
+import { spawn } from 'child_process'
 
 let mainWindow: Electron.BrowserWindow | null
 
