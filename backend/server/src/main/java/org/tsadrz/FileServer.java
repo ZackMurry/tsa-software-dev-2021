@@ -74,8 +74,7 @@ public class FileServer {
 
         try {
             objectInput = new ObjectInputStream(inputStream);
-            FileModel model = (FileModel) objectInput.readObject();
-            return model;
+            return (FileModel) objectInput.readObject();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
