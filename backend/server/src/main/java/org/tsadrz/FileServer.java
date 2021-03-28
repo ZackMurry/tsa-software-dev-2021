@@ -17,7 +17,7 @@ public class FileServer {
     private final byte[] key;
 
     public FileServer(String password) throws IOException, NoSuchAlgorithmException {
-        this.serverSocket = new ServerSocket(PORT, 1, InetAddress.getLocalHost());
+        this.serverSocket = new ServerSocket(PORT);
         this.key = new SecretKeyGenerator().generate(password);
     }
 
