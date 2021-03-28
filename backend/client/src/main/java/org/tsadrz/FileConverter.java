@@ -30,7 +30,7 @@ public class FileConverter {
         final List<Byte> data = new ArrayList<>();
         String line;
         while ((line = reader.readLine()) != null) {
-            byte[] lineData = AESEncryptor.encrypt((line + "\n").getBytes(StandardCharsets.UTF_8), key);
+            byte[] lineData = (line + "\n").getBytes(StandardCharsets.UTF_8);
             for (byte b : lineData) {
                 data.add(b);
             }
@@ -39,7 +39,9 @@ public class FileConverter {
         for (int i = 0; i < data.size(); i++) {
             dataArr[i] = data.get(i);
         }
-        return dataArr;
+
+        return AESEncryptor.encrypt(dataArr, key);
+
     }
 
     public void close() throws IOException {
