@@ -31,10 +31,9 @@ public class FileServer {
             final BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
             final String fileName = br.readLine();
             final InputStream in = client.getInputStream();
-            final byte[] data = in.readAllBytes();
-            if (data == null) {
-                continue;
-            }
+            FileModel model = deserialize(in.readAllBytes());
+
+
             // The first line transferred is the name of the file
             final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + fileName, key);
             fileConverter.decryptAndWrite(data);
@@ -68,5 +67,28 @@ public class FileServer {
             System.out.println(String.join("\n", Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toArray(String[]::new)));
         }
     }
+
+    private static FileModel deserialize(byte[] data) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
+        ObjectInput objectInput = null;
+
+        try {
+            objectInput = new ObjectInputStream(inputStream);
+            FileModel model = (FileModel) objectInput.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (objectInput != null) {
+                    objectInput.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package org.tsadrz.client;
 
+import javax.print.ServiceUI;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -26,9 +27,16 @@ public class FileClient {
         final FileConverter fileConverter = new FileConverter(filePath, key);
         // Write the name of the file so that it can have the same name for the user receiving it
         out.write((new File(filePath).getName() + "\n").getBytes(StandardCharsets.UTF_8));
-        while (true) {
+
+        FileModel model = new FileModel(new File(filePath).getName(), fileConverter.encryptAndRead());
+        socket.getOutputStream().write(serialize(model));
+        out.flush();
+        out.close();
+        fileConverter.close();
+
+        /*while (true) {
             // Read a line from the file and encrypt it
-            final byte[] line = fileConverter.encryptAndReadLine();
+            final byte[] line = fileConverter.encryptAndRead();
             if (line == null) {
                 break;
             }
@@ -36,7 +44,7 @@ public class FileClient {
             out.flush();
         }
         out.close();
-        fileConverter.close();
+        fileConverter.close();*/
     }
 
     public static void main(String[] args) throws Exception {
@@ -49,6 +57,24 @@ public class FileClient {
         System.out.println("Connecting to " + targetDetails.getIp());
         final FileClient fileClient = new FileClient(targetDetails, filePath);
         fileClient.start();
+    }
+
+    private static byte[] serialize(FileModel model) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = null;
+
+        try {
+            objectOutputStream = new ObjectOutputStream(outputStream);
+            objectOutputStream.writeObject(model);
+            objectOutputStream.flush();
+            return outputStream.toByteArray();
+        } finally {
+            try {
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private static void loadSettings()
