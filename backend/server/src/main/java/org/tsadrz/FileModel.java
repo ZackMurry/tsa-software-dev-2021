@@ -1,6 +1,6 @@
-package org.tsadrz.client;
+package org.tsadrz;
 
-import java.io.Serializable;
+import java.io.*;
 
 public class FileModel implements Serializable {
     public String name;
@@ -10,5 +10,6 @@ public class FileModel implements Serializable {
         this.name = name;
         this.data = data;
     }
+
 
 }

@@ -1,7 +1,6 @@
-package org.tsadrz.server;
+package org.tsadrz;
 
 import java.io.*;
-import java.util.Base64;
 
 /**
  * This is responsible for decrypting data and writing it to the correct file

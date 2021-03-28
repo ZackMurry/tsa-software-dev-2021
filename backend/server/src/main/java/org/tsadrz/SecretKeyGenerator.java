@@ -1,4 +1,4 @@
-package org.tsadrz.client;
+package org.tsadrz;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -13,7 +13,7 @@ public class SecretKeyGenerator {
     }
 
     /**
-     * Generates the SHA-256 hash of a String
+     * Takes a String and generates the SHA-256 hash of it
      * @param input String to hash
      * @return Hash of String
      */

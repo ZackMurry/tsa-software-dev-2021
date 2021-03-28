@@ -1,9 +1,7 @@
-package org.tsadrz.client;
+package org.tsadrz;
 
-import javax.print.ServiceUI;
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
 public class FileClient {
 
@@ -26,7 +24,7 @@ public class FileClient {
         final byte[] key = new SecretKeyGenerator().generate(targetDetails.getPassword());
         final FileConverter fileConverter = new FileConverter(filePath, key);
         // Write the name of the file so that it can have the same name for the user receiving it
-        out.write((new File(filePath).getName() + "\n").getBytes(StandardCharsets.UTF_8));
+//        out.write((new File(filePath).getName() + "\n").getBytes(StandardCharsets.UTF_8));
 
         FileModel model = new FileModel(new File(filePath).getName(), fileConverter.encryptAndRead());
         socket.getOutputStream().write(serialize(model));

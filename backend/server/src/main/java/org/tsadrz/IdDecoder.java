@@ -1,4 +1,4 @@
-package org.tsadrz.client;
+package org.tsadrz;
 
 import java.util.Base64;
 
@@ -21,3 +21,4 @@ public class IdDecoder {
     }
 
 }
+

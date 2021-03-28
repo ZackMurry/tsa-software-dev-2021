@@ -1,4 +1,4 @@
-package org.tsadrz.client;
+package org.tsadrz;
 
 import java.io.Serializable;
 

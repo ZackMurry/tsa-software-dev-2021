@@ -1,4 +1,4 @@
-package org.tsadrz.client;
+package org.tsadrz;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -7,9 +7,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-import java.util.Base64;
 
 /**
  * This reads the file and encrypts it using an <code>AESEncryptor</code>

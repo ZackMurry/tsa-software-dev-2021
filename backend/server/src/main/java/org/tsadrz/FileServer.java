@@ -1,4 +1,4 @@
-package org.tsadrz.server;
+package org.tsadrz;
 
 import java.io.*;
 import java.net.BindException;
@@ -30,7 +30,9 @@ public class FileServer {
             // InputStream of the socket
             final InputStream in = client.getInputStream();
             FileModel model = deserialize(in.readAllBytes());
-
+            if (model == null) {
+                System.out.println("model is null");
+            }
 
             // The first line transferred is the name of the file
             final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + model.name, key);

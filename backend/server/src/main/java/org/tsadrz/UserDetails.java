@@ -1,4 +1,4 @@
-package org.tsadrz.server;
+package org.tsadrz;
 
 public class UserDetails {
 
