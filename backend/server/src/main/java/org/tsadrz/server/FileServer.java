@@ -28,15 +28,13 @@ public class FileServer {
             final String clientAddress = client.getInetAddress().getHostAddress();
             System.out.println("New connection from " + clientAddress);
             // InputStream of the socket
-            final BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            final String fileName = br.readLine();
             final InputStream in = client.getInputStream();
             FileModel model = deserialize(in.readAllBytes());
 
 
             // The first line transferred is the name of the file
-            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + fileName, key);
-            fileConverter.decryptAndWrite(data);
+            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + model.name, key);
+            fileConverter.decryptAndWrite(model.data);
             fileConverter.close();
             // Now that the request has ended, it is ready to receive a new request
         }

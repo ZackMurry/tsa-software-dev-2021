@@ -77,8 +77,7 @@ public class FileClient {
         }
     }
 
-    private static void loadSettings()
-    {
+    private static void loadSettings() {
         File settingsFile = new File(System.getProperty("user.dir") + "\\settings");
 
         if (!settingsFile.exists()) {

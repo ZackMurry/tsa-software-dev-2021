@@ -5,6 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import java.util.Base64;
 
 /**
@@ -25,14 +29,20 @@ public class FileConverter {
      * @return The encrypted next line
      * @throws Exception If something goes wrong (encryption error, file gets deleted, etc.)
      */
-    public byte[] encryptAndReadLine() throws Exception {
-        final String plainText = reader.readLine(); // Read next line
-        if (plainText == null) {
-            return null;
+    public byte[] encryptAndRead() throws Exception {
+        final List<Byte> data = new ArrayList<>();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            byte[] lineData = AESEncryptor.encrypt((line + "\n").getBytes(StandardCharsets.UTF_8), key);
+            for (byte b : lineData) {
+                data.add(b);
+            }
         }
-//        final byte[] cipherText =
-        return AESEncryptor.encrypt(plainText.getBytes(StandardCharsets.UTF_8), key); // Encrypt using AES
-//        return Base64.getEncoder().encodeToString(cipherText); // Convert to Base64 so that it can be sent in String-form
+        final byte[] dataArr = new byte[data.size()];
+        for (int i = 0; i < data.size(); i++) {
+            dataArr[i] = data.get(i);
+        }
+        return dataArr;
     }
 
     public void close() throws IOException {
