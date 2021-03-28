@@ -1,4 +1,4 @@
-package org.tsadrz.server;
+package org.tsadrz.client;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

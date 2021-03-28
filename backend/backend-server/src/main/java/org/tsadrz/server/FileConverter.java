@@ -1,4 +1,4 @@
-package org.tsadrz.client;
+package org.tsadrz.server;
 
 import java.io.*;
 import java.util.Base64;
