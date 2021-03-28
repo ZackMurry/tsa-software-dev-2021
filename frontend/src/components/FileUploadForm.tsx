@@ -40,6 +40,7 @@ const FileUploadForm: FC = () => {
     })
     let errorHasOccurred = false
     clientProcess.stderr.on('data', data => {
+      console.error(data.toString())
       if (errorHasOccurred) {
         return
       }

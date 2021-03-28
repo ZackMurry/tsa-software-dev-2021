@@ -25,13 +25,14 @@ public class FileConverter {
      * @return The encrypted next line
      * @throws Exception If something goes wrong (encryption error, file gets deleted, etc.)
      */
-    public String encryptAndReadLine() throws Exception {
+    public byte[] encryptAndReadLine() throws Exception {
         final String plainText = reader.readLine(); // Read next line
         if (plainText == null) {
             return null;
         }
-        final byte[] cipherText = AESEncryptor.encrypt(plainText.getBytes(StandardCharsets.UTF_8), key); // Encrypt using AES
-        return Base64.getEncoder().encodeToString(cipherText); // Convert to Base64 so that it can be sent in String-form
+//        final byte[] cipherText =
+        return AESEncryptor.encrypt(plainText.getBytes(StandardCharsets.UTF_8), key); // Encrypt using AES
+//        return Base64.getEncoder().encodeToString(cipherText); // Convert to Base64 so that it can be sent in String-form
     }
 
     public void close() throws IOException {

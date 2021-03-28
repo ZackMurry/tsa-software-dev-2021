@@ -1,9 +1,6 @@
 package org.tsadrz.server;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -26,22 +23,21 @@ public class FileServer {
 
     public void listen() throws Exception {
         while (true) {
-            String data;
             // Wait for a request to come in. Once one comes in, continue
             final Socket client = this.serverSocket.accept();
             final String clientAddress = client.getInetAddress().getHostAddress();
             System.out.println("New connection from " + clientAddress);
             // InputStream of the socket
-            final BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            data = in.readLine();
+            final BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            final String fileName = br.readLine();
+            final InputStream in = client.getInputStream();
+            final byte[] data = in.readAllBytes();
             if (data == null) {
                 continue;
             }
             // The first line transferred is the name of the file
-            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + data, key);
-            while ((data = in.readLine()) != null) {
-                fileConverter.decryptAndWriteLine(data);
-            }
+            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + fileName, key);
+            fileConverter.decryptAndWrite(data);
             fileConverter.close();
             // Now that the request has ended, it is ready to receive a new request
         }

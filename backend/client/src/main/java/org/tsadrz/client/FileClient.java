@@ -2,6 +2,7 @@ package org.tsadrz.client;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class FileClient {
 
@@ -19,19 +20,19 @@ public class FileClient {
     }
 
     public void start() throws Exception {
-        final PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
+        final OutputStream out = this.socket.getOutputStream();
         // Take the SHA-256 hash of the user's "password" for the AES secret key
         final byte[] key = new SecretKeyGenerator().generate(targetDetails.getPassword());
         final FileConverter fileConverter = new FileConverter(filePath, key);
         // Write the name of the file so that it can have the same name for the user receiving it
-        out.println(new File(filePath).getName());
+        out.write((new File(filePath).getName() + "\n").getBytes(StandardCharsets.UTF_8));
         while (true) {
             // Read a line from the file and encrypt it
-            final String line = fileConverter.encryptAndReadLine();
+            final byte[] line = fileConverter.encryptAndReadLine();
             if (line == null) {
                 break;
             }
-            out.println(line);
+            this.socket.getOutputStream().write(line);
             out.flush();
         }
         out.close();

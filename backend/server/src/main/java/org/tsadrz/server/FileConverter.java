@@ -27,9 +27,8 @@ public class FileConverter {
      * @param cipherText Encrypted line of file
      * @throws Exception If something goes wrong (encryption error or error writing to file)
      */
-    public void decryptAndWriteLine(String cipherText) throws Exception {
-        final byte[] decodedCipher = Base64.getDecoder().decode(cipherText);
-        final String plainText = new String(AESDecryptor.decrypt(decodedCipher, key));
+    public void decryptAndWrite(byte[] cipherText) throws Exception {
+        final String plainText = new String(AESDecryptor.decrypt(cipherText, key));
         writer.write(plainText + "\n");
     }
 
