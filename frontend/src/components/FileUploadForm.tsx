@@ -3,29 +3,63 @@ import { Box, Flex, Heading, Text } from '@chakra-ui/layout'
 import { spawn } from 'child_process'
 import { CheckIcon } from '@chakra-ui/icons'
 import { Collapse } from '@chakra-ui/transition'
+import path from 'path'
 import FileSelector from './FileSelector'
 import ApplicationInput from './ApplicationInput'
 import ApplicationButton from './ApplicationButton'
+import { getConfig } from '../lib/getConfig'
+import { useToast } from '@chakra-ui/toast'
+import { dataPath } from '../lib/setup'
+
+const { getCurrentWindow } = require('electron').remote
 
 const FileUploadForm: FC = () => {
   const [filePath, setFilePath] = useState<string | null>(null)
   const [targetId, setTargetId] = useState('')
   const [shareState, setShareState] = useState<'details' | 'starting' | 'uploading' | 'done'>('details')
   const dropRef = useRef<HTMLDivElement>(null)
+  const toast = useToast()
 
   const handleShare = () => {
     setShareState('starting')
-    // todo this is hard-coded
-    const child = spawn('java', ['-jar', '/home/zack/tsa-software-dev-2021/backend/client/target/backend-1.0-SNAPSHOT.jar'])
-    child.stdout.on('data', data => {
-      console.log(`child: ${data}`)
+    const config = getConfig()
+    if (typeof config === 'string') {
+      toast({
+        status: 'error',
+        title: `Error loading configuration: ${config}`,
+        description: `Please edit the configuration file (${path.join(dataPath, 'config.json')})`
+      })
+      return
+    }
+    if (!filePath) {
+      return
+    }
+    const clientProcess = spawn('java', ['-jar', config.clientPath, targetId, filePath])
+    clientProcess.stdout.on('data', data => {
+      console.log(`client: ${data}`)
     })
-    child.stderr.on('data', data => {
-      console.error(`child: ${data}`)
+    let errorHasOccurred = false
+    clientProcess.stderr.on('data', data => {
+      if (errorHasOccurred) {
+        return
+      }
+      errorHasOccurred = true
+      setShareState('details')
+      toast({
+        status: 'error',
+        title: 'An error occurred while uploading.',
+        description: "Make sure that the person you're sharing with has their server running",
+        isClosable: true
+      })
     })
-    child.on('exit', code => {
+    clientProcess.on('exit', code => {
       if (code === 0) {
         setShareState('done')
+      }
+    })
+    getCurrentWindow().on('close', () => {
+      if (!clientProcess.killed) {
+        clientProcess.kill('SIGINT')
       }
     })
     setShareState('uploading')

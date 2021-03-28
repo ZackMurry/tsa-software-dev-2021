@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class FileServer {
 
@@ -53,15 +55,22 @@ public class FileServer {
         return this.serverSocket.getLocalPort();
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         // The only argument for this program is the ID of the user that is receiving files
         if (args.length == 0) {
             throw new IllegalArgumentException("Argument required: id of user");
         }
-        final UserDetails userDetails = IdDecoder.decode(args[0]);
-        final FileServer fileServer = new FileServer(userDetails.getPassword());
-        System.out.println("Listening at " + fileServer.getSocketAddress().getHostAddress() + ":" + fileServer.getPort());
-        fileServer.listen();
+        try {
+            final UserDetails userDetails = IdDecoder.decode(args[0]);
+            final FileServer fileServer = new FileServer(userDetails.getPassword());
+            System.out.println("Listening at " + fileServer.getSocketAddress().getHostAddress() + ":" + fileServer.getPort());
+            fileServer.listen();
+        } catch (BindException e) {
+            System.out.println("Another instance of the server is already running. Aborting...");
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            System.out.println(String.join("\n", Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toArray(String[]::new)));
+        }
     }
 
 }
