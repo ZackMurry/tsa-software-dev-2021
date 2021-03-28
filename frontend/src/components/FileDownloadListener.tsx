@@ -18,7 +18,6 @@ const FileDownloadListener: FC = () => {
   }
 
   useEffect(() => {
-    console.log('adding chokidar')
     const watcher = chokidar.watch(path.join(os.homedir(), 'tsa-drz-files'), {
       persistent: true,
       ignored: /[\/\\]\./

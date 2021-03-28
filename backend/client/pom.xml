@@ -24,7 +24,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.tsadrz.Main</mainClass>
+                            <mainClass>org.tsadrz.server.FileClient</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

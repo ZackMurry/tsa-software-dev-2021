@@ -1,4 +1,4 @@
-package org.tsadrz;
+package org.tsadrz.server;
 
 import java.io.Serializable;
 
