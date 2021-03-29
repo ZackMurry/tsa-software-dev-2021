@@ -1,9 +1,5 @@
 package org.tsadrz;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;

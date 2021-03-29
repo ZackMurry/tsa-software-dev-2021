@@ -1,20 +1,19 @@
 import { app, BrowserWindow } from 'electron'
 import * as path from 'path'
 import * as url from 'url'
-import { spawn } from 'child_process'
 
 let mainWindow: Electron.BrowserWindow | null
 
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 550,
+    height: 600,
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false
     }
   })
-  // mainWindow.setMenu(null)
+  mainWindow.setMenu(null)
 
   if (process.env.NODE_ENV === 'development') {
     mainWindow.loadURL(`http://localhost:4000`)
