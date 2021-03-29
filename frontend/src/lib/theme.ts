@@ -36,6 +36,7 @@ config.fonts = {
 config.components = {
   Heading: {
     baseStyle: {
+      // @ts-ignore
       color: 'white'
     }
   },
