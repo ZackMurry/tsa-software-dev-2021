@@ -36,7 +36,7 @@ public class FileServer {
 
             // The first line transferred is the name of the file
             final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + model.name, key);
-            fileConverter.decryptAndWrite(model.data);
+//            fileConverter.decryptAndWrite(model.data);
             fileConverter.close();
             // Now that the request has ended, it is ready to receive a new request
         }

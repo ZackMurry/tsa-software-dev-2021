@@ -19,6 +19,7 @@ public class FileClient {
     }
 
     public void start() throws Exception {
+
         final OutputStream out = this.socket.getOutputStream();
         // Take the SHA-256 hash of the user's "password" for the AES secret key
         final byte[] key = new SecretKeyGenerator().generate(targetDetails.getPassword());
