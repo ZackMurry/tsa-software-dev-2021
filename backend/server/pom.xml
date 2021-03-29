@@ -8,6 +8,14 @@
     <artifactId>backend-server</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.msgpack</groupId>
+            <artifactId>msgpack-core</artifactId>
+            <version>0.8.22</version>
+        </dependency>
+    </dependencies>
+
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>

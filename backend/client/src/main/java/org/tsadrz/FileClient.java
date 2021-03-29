@@ -1,5 +1,8 @@
 package org.tsadrz;
 
+import org.msgpack.core.MessageBufferPacker;
+import org.msgpack.core.MessagePack;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -28,7 +31,16 @@ public class FileClient {
 //        out.write((new File(filePath).getName() + "\n").getBytes(StandardCharsets.UTF_8));
 
         FileModel model = new FileModel(new File(filePath).getName(), fileConverter.encryptAndRead());
-        socket.getOutputStream().write(serialize(model));
+
+        MessageBufferPacker serializer = MessagePack.newDefaultBufferPacker();
+
+        serializer
+                .packString(model.name)
+                .packBinaryHeader(model.data.length)
+                .addPayload(model.data);
+
+        socket.getOutputStream().write(serializer.toByteArray());
+
         out.flush();
         out.close();
         fileConverter.close();
@@ -56,24 +68,6 @@ public class FileClient {
         System.out.println("Connecting to " + targetDetails.getIp());
         final FileClient fileClient = new FileClient(targetDetails, filePath);
         fileClient.start();
-    }
-
-    private static byte[] serialize(FileModel model) throws IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = null;
-
-        try {
-            objectOutputStream = new ObjectOutputStream(outputStream);
-            objectOutputStream.writeObject(model);
-            objectOutputStream.flush();
-            return outputStream.toByteArray();
-        } finally {
-            try {
-                outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private static void loadSettings() {

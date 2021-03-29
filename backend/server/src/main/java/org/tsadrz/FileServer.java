@@ -1,5 +1,8 @@
 package org.tsadrz;
 
+import org.msgpack.core.MessagePack;
+import org.msgpack.core.MessageUnpacker;
+
 import java.io.*;
 import java.net.BindException;
 import java.net.InetAddress;
@@ -29,14 +32,20 @@ public class FileServer {
             System.out.println("New connection from " + clientAddress);
             // InputStream of the socket
             final InputStream in = client.getInputStream();
-            FileModel model = deserialize(in.readAllBytes());
-            if (model == null) {
-                System.out.println("model is null");
+
+            MessageUnpacker deserializer = MessagePack.newDefaultUnpacker(in.readAllBytes());
+
+            String fileName = deserializer.unpackString();
+            byte[] fileData = deserializer.readPayload(deserializer.unpackBinaryHeader());
+
+
+            if (fileName == null || fileData == null) {
+                System.out.println("missing field");
             }
 
             // The first line transferred is the name of the file
-            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + model.name, key);
-//            fileConverter.decryptAndWrite(model.data);
+            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + fileName, key);
+            fileConverter.decryptAndWrite(fileData);
             fileConverter.close();
             // Now that the request has ended, it is ready to receive a new request
         }
@@ -67,28 +76,4 @@ public class FileServer {
             System.out.println(String.join("\n", Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toArray(String[]::new)));
         }
     }
-
-    private static FileModel deserialize(byte[] data) {
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
-        ObjectInput objectInput = null;
-
-        try {
-            objectInput = new ObjectInputStream(inputStream);
-            return (FileModel) objectInput.readObject();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (objectInput != null) {
-                    objectInput.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
-    }
-
-
 }
