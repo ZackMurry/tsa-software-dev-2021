@@ -1,9 +1,7 @@
 package org.tsadrz;
 
-import org.msgpack.core.MessagePack;
-import org.msgpack.core.MessageUnpacker;
-import org.msgpack.value.ArrayValue;
-import org.msgpack.value.Value;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
 
 import java.io.*;
 import java.net.BindException;
@@ -35,30 +33,23 @@ public class FileServer {
             // InputStream of the socket
             final InputStream in = client.getInputStream();
 
-            MessageUnpacker deserializer = MessagePack.newDefaultUnpacker(in.readAllBytes());
+            Kryo kryo = new Kryo();
+            kryo.register(FileModel.class);
 
-            String fileName = deserializer.unpackString();
-
-            int size = deserializer.unpackArrayHeader();
-
-            /*byte[] fileData = new byte[size];
-
-            for (int i = 0; i < size; i++)
-            {
-                fileData[i] = deserializer.unpackByte();
-            }
-
-            deserializer.close();*/
+            Input input = new Input(in);
+            FileModel fileModel = kryo.readObject(input, FileModel.class);
 
 
-            /*if (fileName == null || fileData == null) {
+            if (fileModel.name == null || fileModel.data == null) {
                 System.out.println("missing field");
             }
 
             // The first line transferred is the name of the file
-            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + fileName, key);
-            fileConverter.decryptAndWrite(fileData);
-            fileConverter.close();*/
+
+            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + fileModel.name, key);
+            fileConverter.decryptAndWrite(fileModel.data);
+            fileConverter.close();
+
             // Now that the request has ended, it is ready to receive a new request
         }
     }
