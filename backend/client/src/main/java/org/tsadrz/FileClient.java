@@ -35,13 +35,12 @@ public class FileClient {
         byte[] data = fileConverter.encryptAndRead();
 
 
-
         serializer.packString(new File(filePath).getName());
 
-        serializer.packArrayHeader(data.length);
+        /*serializer.packArrayHeader(data.length);
 
         for (byte d : data)
-            serializer.packByte(d);
+            serializer.packByte(d);*/
 
         serializer.close();
 

@@ -41,24 +41,24 @@ public class FileServer {
 
             int size = deserializer.unpackArrayHeader();
 
-            byte[] fileData = new byte[size];
+            /*byte[] fileData = new byte[size];
 
             for (int i = 0; i < size; i++)
             {
                 fileData[i] = deserializer.unpackByte();
             }
 
-            deserializer.close();
+            deserializer.close();*/
 
 
-            if (fileName == null || fileData == null) {
+            /*if (fileName == null || fileData == null) {
                 System.out.println("missing field");
             }
 
             // The first line transferred is the name of the file
             final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + fileName, key);
             fileConverter.decryptAndWrite(fileData);
-            fileConverter.close();
+            fileConverter.close();*/
             // Now that the request has ended, it is ready to receive a new request
         }
     }
