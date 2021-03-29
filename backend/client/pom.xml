@@ -10,9 +10,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.msgpack</groupId>
-            <artifactId>msgpack-core</artifactId>
-            <version>0.8.22</version>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>5.0.4</version>
         </dependency>
     </dependencies>
 

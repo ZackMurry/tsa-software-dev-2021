@@ -1,7 +1,8 @@
 package org.tsadrz;
 
-import org.msgpack.core.MessageBufferPacker;
-import org.msgpack.core.MessagePack;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 
 import java.io.*;
 import java.net.Socket;
@@ -28,39 +29,19 @@ public class FileClient {
         final byte[] key = new SecretKeyGenerator().generate(targetDetails.getPassword());
         final FileConverter fileConverter = new FileConverter(filePath, key);
         // Write the name of the file so that it can have the same name for the user receiving it
-//        out.write((new File(filePath).getName() + "\n").getBytes(StandardCharsets.UTF_8));
+        // out.write((new File(filePath).getName() + "\n").getBytes(StandardCharsets.UTF_8));
 
-        MessageBufferPacker serializer = MessagePack.newDefaultBufferPacker();
+        Kryo kryo = new Kryo();
+        kryo.register(FileModel.class);
 
-        byte[] data = fileConverter.encryptAndRead();
+        FileModel fileModel = new FileModel(new File(filePath).getName(), fileConverter.encryptAndRead());
 
-
-        serializer.packString(new File(filePath).getName());
-
-        /*serializer.packArrayHeader(data.length);
-
-        for (byte d : data)
-            serializer.packByte(d);*/
-
-        serializer.close();
-
-        socket.getOutputStream().write(serializer.toByteArray());
+        Output output = new Output(out);
+        kryo.writeObject(output, fileModel);
 
         out.flush();
         out.close();
         fileConverter.close();
-
-        /*while (true) {
-            // Read a line from the file and encrypt it
-            final byte[] line = fileConverter.encryptAndRead();
-            if (line == null) {
-                break;
-            }
-            this.socket.getOutputStream().write(line);
-            out.flush();
-        }
-        out.close();
-        fileConverter.close();*/
     }
 
     public static void main(String[] args) throws Exception {
