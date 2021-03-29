@@ -37,7 +37,7 @@ public class FileClient {
         serializer
                 .packString(model.name)
                 .packBinaryHeader(model.data.length)
-                .addPayload(model.data);
+                .writePayload(model.data);
 
         socket.getOutputStream().write(serializer.toByteArray());
 
