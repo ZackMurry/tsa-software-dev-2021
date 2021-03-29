@@ -30,15 +30,7 @@ public class FileClient {
         final FileConverter fileConverter = new FileConverter(filePath, key);
         // Write the name of the file so that it can have the same name for the user receiving it
         // out.write((new File(filePath).getName() + "\n").getBytes(StandardCharsets.UTF_8));
-
-        Kryo kryo = new Kryo();
-        kryo.register(FileModel.class);
-
-        FileModel fileModel = new FileModel(new File(filePath).getName(), fileConverter.encryptAndRead());
-
-        Output output = new Output(out);
-        kryo.writeObject(output, fileModel);
-
+        out.write(fileConverter.encryptAndRead());
         out.flush();
         out.close();
         fileConverter.close();

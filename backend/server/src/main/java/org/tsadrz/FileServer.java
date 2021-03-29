@@ -33,21 +33,10 @@ public class FileServer {
             // InputStream of the socket
             final InputStream in = client.getInputStream();
 
-            Kryo kryo = new Kryo();
-            kryo.register(FileModel.class);
-
-            Input input = new Input(in);
-            FileModel fileModel = kryo.readObject(input, FileModel.class);
-
-
-            if (fileModel.name == null || fileModel.data == null) {
-                System.out.println("missing field");
-            }
-
             // The first line transferred is the name of the file
 
-            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + fileModel.name, key);
-            fileConverter.decryptAndWrite(fileModel.data);
+            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + System.currentTimeMillis(), key);
+            fileConverter.decryptAndWrite(in.readAllBytes());
             fileConverter.close();
 
             // Now that the request has ended, it is ready to receive a new request
