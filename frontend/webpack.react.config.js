@@ -36,5 +36,5 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'js/[name].js'
   },
-  plugins: [new HtmlWebpackPlugin({ title: 'File Transfer', template: 'index.hbs' })]
+  plugins: [new HtmlWebpackPlugin({ title: 'Secure File Transfer', template: 'index.hbs' })]
 }
