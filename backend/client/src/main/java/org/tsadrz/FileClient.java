@@ -43,6 +43,8 @@ public class FileClient {
         for (byte d : data)
             serializer.packByte(d);
 
+        serializer.close();
+
         socket.getOutputStream().write(serializer.toByteArray());
 
         out.flush();
