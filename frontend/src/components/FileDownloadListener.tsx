@@ -4,17 +4,14 @@ import os from 'os'
 import path from 'path'
 import { useToast } from '@chakra-ui/toast'
 
-const FileDownloadListener: FC = () => {
-  const toast = useToast()
+const { Notification } = require('electron').remote
 
+const FileDownloadListener: FC = () => {
   const handleNewFile = (path: string) => {
-    toast({
-      title: 'New file!',
-      description: `You just received a new file (${path})`,
-      position: 'bottom',
-      isClosable: true,
-      status: 'success'
-    })
+    new Notification({
+      title: 'New file from Secure File Transfer',
+      body: `You just received a new file (${path})`
+    }).show()
   }
 
   useEffect(() => {
