@@ -30,14 +30,15 @@ public class FileClient {
         // Write the name of the file so that it can have the same name for the user receiving it
 //        out.write((new File(filePath).getName() + "\n").getBytes(StandardCharsets.UTF_8));
 
-        FileModel model = new FileModel(new File(filePath).getName(), fileConverter.encryptAndRead());
-
         MessageBufferPacker serializer = MessagePack.newDefaultBufferPacker();
 
+        byte[] data = fileConverter.encryptAndRead();
+
         serializer
-                .packString(model.name)
-                .packBinaryHeader(model.data.length)
-                .writePayload(model.data);
+                .packString(new File(filePath).getName())
+                .packBinaryHeader(data.length)
+                .writePayload(data);
+        serializer.close();
 
         socket.getOutputStream().write(serializer.toByteArray());
 
