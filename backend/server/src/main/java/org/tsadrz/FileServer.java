@@ -2,6 +2,8 @@ package org.tsadrz;
 
 import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessageUnpacker;
+import org.msgpack.value.ArrayValue;
+import org.msgpack.value.Value;
 
 import java.io.*;
 import java.net.BindException;
@@ -36,7 +38,17 @@ public class FileServer {
             MessageUnpacker deserializer = MessagePack.newDefaultUnpacker(in.readAllBytes());
 
             String fileName = deserializer.unpackString();
-            byte[] fileData = deserializer.readPayload(deserializer.unpackBinaryHeader());
+
+            int size = deserializer.unpackArrayHeader();
+
+            byte[] fileData = new byte[size];
+
+            for (int i = 0; i < size; i++)
+            {
+                fileData[i] = deserializer.unpackByte();
+            }
+
+            deserializer.close();
 
 
             if (fileName == null || fileData == null) {

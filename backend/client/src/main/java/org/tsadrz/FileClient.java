@@ -34,11 +34,14 @@ public class FileClient {
 
         byte[] data = fileConverter.encryptAndRead();
 
-        serializer
-                .packString(new File(filePath).getName())
-                .packBinaryHeader(data.length)
-                .writePayload(data);
-        serializer.close();
+
+
+        serializer.packString(new File(filePath).getName());
+
+        serializer.packArrayHeader(data.length);
+
+        for (byte d : data)
+            serializer.packByte(d);
 
         socket.getOutputStream().write(serializer.toByteArray());
 
