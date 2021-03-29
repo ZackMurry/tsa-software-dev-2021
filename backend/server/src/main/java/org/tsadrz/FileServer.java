@@ -26,19 +26,23 @@ public class FileServer {
 
     public void listen() throws Exception {
         while (true) {
+            String data;
             // Wait for a request to come in. Once one comes in, continue
             final Socket client = this.serverSocket.accept();
             final String clientAddress = client.getInetAddress().getHostAddress();
             System.out.println("New connection from " + clientAddress);
             // InputStream of the socket
-            final InputStream in = client.getInputStream();
-
+            final BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            data = in.readLine();
+            if (data == null) {
+                continue;
+            }
             // The first line transferred is the name of the file
-
-            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + System.currentTimeMillis(), key);
-            fileConverter.decryptAndWrite(in.readAllBytes());
+            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + data, key);
+            while ((data = in.readLine()) != null) {
+                fileConverter.decryptAndWriteLine(data);
+            }
             fileConverter.close();
-
             // Now that the request has ended, it is ready to receive a new request
         }
     }

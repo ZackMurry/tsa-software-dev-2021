@@ -1,10 +1,8 @@
 package org.tsadrz;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -26,22 +24,14 @@ public class FileConverter {
      * @return The encrypted next line
      * @throws Exception If something goes wrong (encryption error, file gets deleted, etc.)
      */
-    public byte[] encryptAndRead() throws Exception {
-        final List<Byte> data = new ArrayList<>();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            byte[] lineData = (line + "\n").getBytes(StandardCharsets.UTF_8);
-            for (byte b : lineData) {
-                data.add(b);
-            }
+    public String encryptAndReadLine() throws Exception {
+        final String plainText = reader.readLine(); // Read next line
+        if (plainText == null) {
+            return null;
         }
-        final byte[] dataArr = new byte[data.size()];
-        for (int i = 0; i < data.size(); i++) {
-            dataArr[i] = data.get(i);
-        }
+        final byte[] cipherText = AESEncryptor.encrypt(plainText.getBytes(StandardCharsets.UTF_8), key); // Encrypt using AES
 
-        return AESEncryptor.encrypt(dataArr, key);
-
+        return Base64.getEncoder().encodeToString(cipherText); // Convert to Base64 so that it can be sent in String-form
     }
 
     public void close() throws IOException {
