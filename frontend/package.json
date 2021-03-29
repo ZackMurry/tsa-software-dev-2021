@@ -1,7 +1,7 @@
 {
-  "name": "tsa-software-development",
+  "name": "secure-file-transfer",
   "version": "1.0.0",
-  "description": "New Electron app",
+  "description": "A secure way to transfer files",
   "main": "./dist/main.js",
   "scripts": {
     "dev:electron": "webpack --config webpack.electron.config.js --mode development && electron .",
