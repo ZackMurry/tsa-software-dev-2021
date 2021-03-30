@@ -29,7 +29,7 @@ public class FileConverter {
      * @throws Exception If something goes wrong (encryption error or error writing to file)
      */
     public void decryptAndWriteLine(String cipherText) throws Exception {
-        final byte[] decodedCipher = Base64.getDecoder().decode(cipherText);
+        final byte[] decodedCipher = Base64.getDecoder().decode(cipherText.getBytes(StandardCharsets.UTF_8));
         final String plainText = new String(AESDecryptor.decrypt(decodedCipher, key));
         writer.write(plainText + "\n");
     }

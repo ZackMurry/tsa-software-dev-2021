@@ -1,8 +1,5 @@
 package org.tsadrz;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-
 import java.io.*;
 import java.net.BindException;
 import java.net.InetAddress;
@@ -40,6 +37,7 @@ public class FileServer {
             // The first line transferred is the name of the file
             final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + data, key);
             while ((data = in.readLine()) != null) {
+                System.out.println(data);
                 fileConverter.decryptAndWriteLine(data);
             }
             fileConverter.close();

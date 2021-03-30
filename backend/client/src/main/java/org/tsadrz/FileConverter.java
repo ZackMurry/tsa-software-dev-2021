@@ -31,7 +31,7 @@ public class FileConverter {
         }
         final byte[] cipherText = AESEncryptor.encrypt(plainText.getBytes(StandardCharsets.UTF_8), key); // Encrypt using AES
 
-        return Base64.getEncoder().encodeToString(cipherText); // Convert to Base64 so that it can be sent in String-form
+        return new String(Base64.getEncoder().encode(cipherText), StandardCharsets.UTF_8); // Convert to Base64 so that it can be sent in String-form
     }
 
     public void close() throws IOException {
