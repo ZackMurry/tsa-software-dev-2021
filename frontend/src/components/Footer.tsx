@@ -8,7 +8,7 @@ const Footer: FC = () => {
   }
 
   return (
-    <footer style={{ position: 'absolute', bottom: 25, left: 0, width: '100%' }}>
+    <footer style={{ position: 'absolute', bottom: '2.5%', left: 0, width: '100%' }}>
       <Flex w='100%' justifyContent='space-around'>
         <a style={{ color: 'white' }} onClick={handleHelpClick} href='https://github.com/ZackMurry/tsa-software-dev-2021'>
           <Text>Help</Text>

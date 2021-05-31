@@ -1,5 +1,5 @@
 import React, { FC, RefObject, useEffect } from 'react'
-import { Flex, Text } from '@chakra-ui/react'
+import { Box, Flex, Text } from '@chakra-ui/react'
 const { dialog } = window.require('electron').remote
 import ApplicationButton from './ApplicationButton'
 
@@ -42,7 +42,7 @@ const FileSelector: FC<Props> = ({ onSelect, dropRef }) => {
   }
 
   return (
-    <>
+    <Box>
       <Text fontWeight='bold' textAlign='center'>
         Drop a file
       </Text>
@@ -52,7 +52,7 @@ const FileSelector: FC<Props> = ({ onSelect, dropRef }) => {
           Select a file
         </ApplicationButton>
       </Flex>
-    </>
+    </Box>
   )
 }
 

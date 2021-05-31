@@ -10,6 +10,7 @@ import ApplicationButton from './ApplicationButton'
 import { getConfig } from '../lib/getConfig'
 import { useToast } from '@chakra-ui/toast'
 import { dataPath } from '../lib/setup'
+import { Button } from '@chakra-ui/button'
 
 const { getCurrentWindow } = require('electron').remote
 
@@ -72,13 +73,36 @@ const FileUploadForm: FC = () => {
     setTimeout(() => setShareState('details'), 1500)
   }
 
+  const handleCancelShare = () => {
+    setShareState('details')
+    setFilePath(null)
+  }
+
   return (
-    <Box mt='15px' bg='mono.200' borderRadius='15px'>
+    <Box mt='25px' bg='mono.200' borderRadius='15px'>
       <Heading fontSize='30px' pt='15px' pl='15px'>
         Share a file
       </Heading>
-      <Flex p='15px' borderRadius='15px' bg='mono.200' ref={dropRef} justifyContent='center' alignItems='center'>
-        <Box pt='40px' pb='40px' w='100%' borderRadius='15px' borderColor='mono.300' borderStyle='dashed' borderWidth='1px'>
+      <Flex
+        p='15px'
+        h='35vh'
+        minH='200px'
+        borderRadius='15px'
+        bg='mono.200'
+        ref={dropRef}
+        justifyContent='center'
+        alignItems='center'
+      >
+        <Flex
+          justifyContent='center'
+          alignItems='center'
+          w='100%'
+          h='95%'
+          borderRadius='15px'
+          borderColor='mono.300'
+          borderStyle='dashed'
+          borderWidth='1px'
+        >
           {filePath ? (
             <Flex w='100%' h='85px' justifyContent='center' alignItems='center' flexDir='column'>
               <CheckIcon color='highlight.500' fontSize='36px' />
@@ -92,7 +116,7 @@ const FileUploadForm: FC = () => {
           ) : (
             <FileSelector dropRef={dropRef} onSelect={setFilePath} />
           )}
-        </Box>
+        </Flex>
       </Flex>
       <Collapse in={Boolean(filePath)}>
         <Box p='15px' pb='20px' pl='20px'>
@@ -111,6 +135,15 @@ const FileUploadForm: FC = () => {
                 <ApplicationButton isLoading={shareState !== 'details'} onClick={handleShare}>
                   Share
                 </ApplicationButton>
+                <Button
+                  onClick={handleCancelShare}
+                  variant='outline'
+                  color='white'
+                  _hover={{ bg: 'rgba(0, 0, 0, 25%)' }}
+                  ml='10px'
+                >
+                  Cancel
+                </Button>
                 {shareState === 'starting' && <Text ml='15px'>Starting upload...</Text>}
                 {shareState === 'uploading' && <Text ml='15px'>Uploading file...</Text>}
               </Flex>

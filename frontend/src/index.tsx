@@ -1,4 +1,4 @@
-import { Box, ChakraProvider, Heading } from '@chakra-ui/react'
+import { Box, ChakraProvider, Flex, Heading } from '@chakra-ui/react'
 import React, { useEffect } from 'react'
 import ReactDom from 'react-dom'
 import getStorage from './lib/getStorage'
@@ -11,6 +11,7 @@ import ContactInformation from './components/ContactInformation'
 import FileUploadForm from './components/FileUploadForm'
 import FileDownloadListener from './components/FileDownloadListener'
 import Footer from './components/Footer'
+import ContactsPanel from './components/ContactsPanel'
 
 const mainElement = document.createElement('div')
 document.body.appendChild(mainElement)
@@ -30,11 +31,16 @@ const App = () => {
       <storageContext.Provider value={storage}>
         <Box p='7.5%'>
           <Heading mb='15px'>Secure File Transfer</Heading>
-          <ContactInformation />
-          <FileUploadForm />
-          <FileDownloadListener />
+          <Flex justifyContent='center' flexDir={{ base: 'column', md: 'row' }}>
+            <ContactsPanel />
+            <Box ml={{ base: 0, md: '2.5%' }} mt={{ base: '2.5%', md: 0 }}>
+              <ContactInformation />
+              <FileUploadForm />
+            </Box>
+          </Flex>
           <Footer />
         </Box>
+        <FileDownloadListener />
         <ServerLoader />
       </storageContext.Provider>
     </ChakraProvider>
