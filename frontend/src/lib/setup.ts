@@ -6,6 +6,7 @@ import { StorageData } from './types'
 
 export const dataPath = path.join(os.homedir(), '.sft')
 export const storagePath = path.join(dataPath, 'storage.json')
+export const contactsPath = path.join(dataPath, 'contacts.json')
 
 const setup = async () => {
   if (fs.existsSync(storagePath)) {
@@ -26,6 +27,9 @@ const setup = async () => {
     fs.mkdirSync(dataPath, { recursive: true })
   }
   fs.writeFileSync(storagePath, JSON.stringify(data), {})
+  if (!fs.existsSync(contactsPath)) {
+    fs.writeFileSync(contactsPath, JSON.stringify([]), {})
+  }
   return true
 }
 

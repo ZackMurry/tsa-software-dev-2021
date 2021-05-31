@@ -1,5 +1,5 @@
-import { Box, ChakraProvider, Flex, Heading } from '@chakra-ui/react'
-import React, { useEffect } from 'react'
+import { Box, ChakraProvider, Flex, Heading, Spinner } from '@chakra-ui/react'
+import React, { FC, useEffect, useState } from 'react'
 import ReactDom from 'react-dom'
 import getStorage from './lib/getStorage'
 import setup from './lib/setup'
@@ -16,30 +16,38 @@ import ContactsPanel from './components/ContactsPanel'
 const mainElement = document.createElement('div')
 document.body.appendChild(mainElement)
 
-const App = () => {
+const App: FC = () => {
+  const [isLoading, setLoading] = useState(true)
   const storage = useStorage()
   useEffect(() => {
     const setupStorage = async () => {
       if (await setup()) {
         storage.updateStorage(getStorage()!)
       }
+      setLoading(false)
     }
     setupStorage()
   }, [])
   return (
     <ChakraProvider theme={theme}>
       <storageContext.Provider value={storage}>
-        <Box p='7.5%'>
-          <Heading mb='15px'>Secure File Transfer</Heading>
-          <Flex justifyContent='center' flexDir={{ base: 'column', md: 'row' }}>
-            <ContactsPanel />
-            <Box ml={{ base: 0, md: '2.5%' }} mt={{ base: '2.5%', md: 0 }}>
-              <ContactInformation />
-              <FileUploadForm />
-            </Box>
+        {isLoading ? (
+          <Flex justifyContent='center' alignItems='center' w='100%' h='100%'>
+            <Spinner />
           </Flex>
-          <Footer />
-        </Box>
+        ) : (
+          <Box p='7.5%'>
+            <Heading mb='15px'>Secure File Transfer</Heading>
+            <Flex justifyContent='center' flexDir={{ base: 'column', md: 'row' }}>
+              <ContactsPanel />
+              <Box ml={{ base: 0, md: '2.5%' }} mt={{ base: '2.5%', md: 0 }}>
+                <ContactInformation />
+                <FileUploadForm />
+              </Box>
+            </Flex>
+            <Footer />
+          </Box>
+        )}
         <FileDownloadListener />
         <ServerLoader />
       </storageContext.Provider>
