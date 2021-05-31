@@ -11,11 +11,11 @@ import java.util.ArrayList;
  */
 public class FileConverter {
 
-    private final BufferedReader reader;
+    private final BufferedInputStream in;
     private final byte[] key;
 
     public FileConverter(String path, byte[] key) throws FileNotFoundException {
-        this.reader = new BufferedReader(new FileReader(path));
+        this.in = new BufferedInputStream(new FileInputStream(path));
         this.key = key;
     }
 
@@ -24,18 +24,13 @@ public class FileConverter {
      * @return The encrypted next line
      * @throws Exception If something goes wrong (encryption error, file gets deleted, etc.)
      */
-    public String encryptAndReadLine() throws Exception {
-        final String plainText = reader.readLine(); // Read next line
-        if (plainText == null) {
-            return null;
-        }
-        final byte[] cipherText = AESEncryptor.encrypt(plainText.getBytes(StandardCharsets.UTF_8), key); // Encrypt using AES
-
-        return new String(Base64.getEncoder().encode(cipherText), StandardCharsets.UTF_8); // Convert to Base64 so that it can be sent in String-form
+    public byte[] readAndEncrypt() throws Exception {
+        final byte[] plainText = in.readAllBytes(); // Read file
+        return AESEncryptor.encrypt(plainText, key); // Encrypt using AES
     }
 
     public void close() throws IOException {
-        reader.close();
+        in.close();
     }
 
 }

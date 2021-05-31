@@ -34,6 +34,7 @@ public class AESDecryptor {
 
         // Decrypt.
         Cipher cipherDecrypt = Cipher.getInstance("AES/CBC/PKCS5Padding");
+//        Cipher cipherDecrypt = Cipher.getInstance("AES/ECB/NoPadding");
         cipherDecrypt.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
         return cipherDecrypt.doFinal(encryptedBytes);
     }

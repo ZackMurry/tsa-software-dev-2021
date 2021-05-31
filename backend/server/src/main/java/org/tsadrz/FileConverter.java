@@ -1,15 +1,13 @@
 package org.tsadrz;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 /**
  * This is responsible for decrypting data and writing it to the correct file
  */
 public class FileConverter {
 
-    private final FileWriter writer;
+    private final BufferedOutputStream out;
     private final byte[] key;
 
     public FileConverter(String path, byte[] key) throws IOException {
@@ -19,7 +17,7 @@ public class FileConverter {
             // todo: add like (1), (2), etc. after the file's name so that it can continue
             throw new IOException("Error creating file");
         }
-        this.writer = new FileWriter(path);
+        this.out = new BufferedOutputStream(new FileOutputStream(path));
         this.key = key;
     }
 
@@ -28,15 +26,16 @@ public class FileConverter {
      * @param cipherText Encrypted line of file
      * @throws Exception If something goes wrong (encryption error or error writing to file)
      */
-    public void decryptAndWriteLine(String cipherText) throws Exception {
-        final byte[] decodedCipher = Base64.getDecoder().decode(cipherText.getBytes(StandardCharsets.UTF_8));
-        final String plainText = new String(AESDecryptor.decrypt(decodedCipher, key));
-        writer.write(plainText + "\n");
+    public void decryptAndWrite(byte[] cipherText) throws Exception {
+        System.out.println("len: " + cipherText.length);
+        System.out.println("first byte: " + cipherText[0] + "; " + cipherText[1]);
+        final byte[] plainText = AESDecryptor.decrypt(cipherText, key);
+        out.write(plainText);
     }
 
     public void close() throws IOException {
-        writer.flush();
-        writer.close();
+        out.flush();
+        out.close();
     }
 
 }

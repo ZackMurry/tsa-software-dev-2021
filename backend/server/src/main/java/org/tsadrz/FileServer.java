@@ -5,6 +5,7 @@ import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
@@ -23,24 +24,24 @@ public class FileServer {
 
     public void listen() throws Exception {
         while (true) {
-            String data;
             // Wait for a request to come in. Once one comes in, continue
             final Socket client = this.serverSocket.accept();
             final String clientAddress = client.getInetAddress().getHostAddress();
             System.out.println("New connection from " + clientAddress);
             // InputStream of the socket
-            final BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            data = in.readLine();
-            if (data == null) {
-                continue;
+            final BufferedInputStream in = new BufferedInputStream(client.getInputStream());
+            byte[] data = in.readAllBytes();
+            int lengthOfName = 0;
+            byte newLine = "\n".getBytes(StandardCharsets.UTF_8)[0];
+            while (data[lengthOfName] != newLine) {
+                lengthOfName++;
             }
+            final String fileName = new String(Arrays.copyOfRange(data, 0, lengthOfName + 1), StandardCharsets.UTF_8);
+            System.out.println("Received: " + fileName);
             // The first line transferred is the name of the file
-            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + data, key);
+            final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + fileName, key);
             try {
-                while ((data = in.readLine()) != null) {
-                    System.out.println(data);
-                    fileConverter.decryptAndWriteLine(data);
-                }
+                fileConverter.decryptAndWrite(Arrays.copyOfRange(data, lengthOfName + 1, data.length));
             } finally {
                 fileConverter.close();
             }

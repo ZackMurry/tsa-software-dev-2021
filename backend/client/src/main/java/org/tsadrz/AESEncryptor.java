@@ -30,6 +30,7 @@ public class AESEncryptor {
 
         // Encrypt.
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+//        Cipher cipher = Cipher.getInstance("AES/ECB/NoPadding");
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
         byte[] encrypted = cipher.doFinal(plainText);
 

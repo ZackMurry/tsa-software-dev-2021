@@ -20,21 +20,17 @@ public class FileClient {
     }
 
     public void start() throws Exception {
-        final PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
+        final BufferedOutputStream out = new BufferedOutputStream(this.socket.getOutputStream());
         // Take the SHA-256 hash of the user's "password" for the AES secret key
         final byte[] key = new SecretKeyGenerator().generate(targetDetails.getPassword());
         final FileConverter fileConverter = new FileConverter(filePath, key);
         // Write the name of the file so that it can have the same name for the user receiving it
-        out.println(new File(filePath).getName());
-        while (true) {
-            // Read a line from the file and encrypt it
-            final String line = fileConverter.encryptAndReadLine();
-            if (line == null) {
-                break;
-            }
-            out.println(line);
-            out.flush();
-        }
+        out.write((new File(filePath).getName() + "\n").getBytes(StandardCharsets.UTF_8));
+        final byte[] data = fileConverter.readAndEncrypt();
+        System.out.println("client len: " + data.length);
+        System.out.println("First byte: " + data[0] + "; " + data[1]);
+        out.write(data);
+        out.flush();
         out.close();
         fileConverter.close();
     }
