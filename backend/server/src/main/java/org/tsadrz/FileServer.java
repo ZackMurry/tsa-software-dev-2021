@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class FileServer {
 
     private static final int PORT = 7265;
-    private static final String baseDirectory = System.getProperty("user.home") + File.separator + "tsa-drz-files";
+    private static final String baseDirectory = System.getProperty("user.home") + File.separator + "sft-files";
 
     private final ServerSocket serverSocket;
     private final byte[] key;
@@ -36,11 +36,14 @@ public class FileServer {
             }
             // The first line transferred is the name of the file
             final FileConverter fileConverter = new FileConverter(baseDirectory + File.separator + data, key);
-            while ((data = in.readLine()) != null) {
-                System.out.println(data);
-                fileConverter.decryptAndWriteLine(data);
+            try {
+                while ((data = in.readLine()) != null) {
+                    System.out.println(data);
+                    fileConverter.decryptAndWriteLine(data);
+                }
+            } finally {
+                fileConverter.close();
             }
-            fileConverter.close();
             // Now that the request has ended, it is ready to receive a new request
         }
     }
@@ -57,6 +60,17 @@ public class FileServer {
         // The only argument for this program is the ID of the user that is receiving files
         if (args.length == 0) {
             throw new IllegalArgumentException("Argument required: id of user");
+        }
+        final File baseDirFile = new File(baseDirectory);
+        if (!baseDirFile.exists()) {
+            try {
+                if (!baseDirFile.mkdir()) {
+                    throw new IOException();
+                }
+            } catch (IOException e) {
+                System.out.println("Error creating file to store received files in. Aborting...");
+                return;
+            }
         }
         try {
             final UserDetails userDetails = IdDecoder.decode(args[0]);

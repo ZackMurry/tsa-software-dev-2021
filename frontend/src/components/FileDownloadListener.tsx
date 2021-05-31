@@ -2,8 +2,6 @@ import React, { FC, useEffect } from 'react'
 import chokidar from 'chokidar'
 import os from 'os'
 import path from 'path'
-import { useToast } from '@chakra-ui/toast'
-
 const { Notification } = require('electron').remote
 
 const FileDownloadListener: FC = () => {
@@ -15,7 +13,7 @@ const FileDownloadListener: FC = () => {
   }
 
   useEffect(() => {
-    const watcher = chokidar.watch(path.join(os.homedir(), 'tsa-drz-files'), {
+    const watcher = chokidar.watch(path.join(os.homedir(), 'sft-files'), {
       persistent: true,
       ignored: /[\/\\]\./
     })
