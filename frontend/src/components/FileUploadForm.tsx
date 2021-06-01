@@ -16,7 +16,12 @@ import { Contact } from '../lib/types'
 
 const { getCurrentWindow } = require('electron').remote
 
-const FileUploadForm: FC = () => {
+interface Props {
+  onSelectFile: () => void
+  onRestart: () => void
+}
+
+const FileUploadForm: FC<Props> = ({ onSelectFile, onRestart }) => {
   const [filePath, setFilePath] = useState<string | null>(null)
   const [targetId, setTargetId] = useState('')
   const [targetContact, setTargetContact] = useState<Contact | null>(null)
@@ -28,7 +33,7 @@ const FileUploadForm: FC = () => {
     setTargetContact(contact)
   }
 
-  const [{ canDrop, isOver }, drop] = useDrop(() => ({
+  const [, drop] = useDrop(() => ({
     accept: 'contact',
     collect: monitor => ({
       isOver: monitor.isOver(),
@@ -89,6 +94,12 @@ const FileUploadForm: FC = () => {
     setTargetId('')
     setTargetContact(null)
     setTimeout(() => setShareState('details'), 1500)
+    onRestart()
+  }
+
+  const handleSelectFile = (path: string) => {
+    onSelectFile()
+    setFilePath(path)
   }
 
   return (
@@ -127,7 +138,7 @@ const FileUploadForm: FC = () => {
               </Text>
             </Flex>
           ) : (
-            <FileSelector dropRef={dropRef} onSelect={setFilePath} />
+            <FileSelector dropRef={dropRef} onSelect={handleSelectFile} />
           )}
         </Flex>
       </Flex>

@@ -6,14 +6,14 @@ let mainWindow: Electron.BrowserWindow | null
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 700,
+    width: 950,
+    height: 650,
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false
     }
   })
-  // mainWindow.setMenu(null)
+  mainWindow.setMenu(null)
 
   if (process.env.NODE_ENV === 'development') {
     mainWindow.loadURL(`http://localhost:4000`)

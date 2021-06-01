@@ -20,6 +20,7 @@ document.body.appendChild(mainElement)
 
 const App: FC = () => {
   const [isLoading, setLoading] = useState(true)
+  const [isFileUploadOpen, setFileUploadOpen] = useState(false)
   const storage = useStorage()
   useEffect(() => {
     const setupStorage = async () => {
@@ -39,17 +40,17 @@ const App: FC = () => {
           </Flex>
         ) : (
           <DndProvider backend={HTML5Backend}>
-            <Box p='7.5%'>
-              <Heading mb='15px'>Secure File Transfer</Heading>
+            <Flex p='4.5%' justifyContent='center' alignItems='center' flexDir='column'>
+              <Heading mb='25px'>Secure File Transfer</Heading>
               <Flex justifyContent='center' flexDir={{ base: 'column', md: 'row' }}>
-                <ContactsPanel />
+                <ContactsPanel isFullHeight={!isFileUploadOpen} />
                 <Box ml={{ base: 0, md: '2.5%' }} mt={{ base: '2.5%', md: 0 }}>
                   <ContactInformation />
-                  <FileUploadForm />
+                  <FileUploadForm onSelectFile={() => setFileUploadOpen(true)} onRestart={() => setFileUploadOpen(false)} />
                 </Box>
               </Flex>
-              <Footer />
-            </Box>
+            </Flex>
+            <Footer />
           </DndProvider>
         )}
         <FileDownloadListener />
