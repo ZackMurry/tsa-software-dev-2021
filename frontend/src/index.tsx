@@ -1,6 +1,6 @@
 import { Box, ChakraProvider, Flex, Heading, Spinner } from '@chakra-ui/react'
 import React, { FC, useEffect, useState } from 'react'
-import ReactDom from 'react-dom'
+import ReactDOM from 'react-dom'
 import getStorage from './lib/getStorage'
 import setup from './lib/setup'
 import { storageContext } from './lib/storageContext'
@@ -12,6 +12,8 @@ import FileUploadForm from './components/FileUploadForm'
 import FileDownloadListener from './components/FileDownloadListener'
 import Footer from './components/Footer'
 import ContactsPanel from './components/ContactsPanel'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 const mainElement = document.createElement('div')
 document.body.appendChild(mainElement)
@@ -36,17 +38,19 @@ const App: FC = () => {
             <Spinner />
           </Flex>
         ) : (
-          <Box p='7.5%'>
-            <Heading mb='15px'>Secure File Transfer</Heading>
-            <Flex justifyContent='center' flexDir={{ base: 'column', md: 'row' }}>
-              <ContactsPanel />
-              <Box ml={{ base: 0, md: '2.5%' }} mt={{ base: '2.5%', md: 0 }}>
-                <ContactInformation />
-                <FileUploadForm />
-              </Box>
-            </Flex>
-            <Footer />
-          </Box>
+          <DndProvider backend={HTML5Backend}>
+            <Box p='7.5%'>
+              <Heading mb='15px'>Secure File Transfer</Heading>
+              <Flex justifyContent='center' flexDir={{ base: 'column', md: 'row' }}>
+                <ContactsPanel />
+                <Box ml={{ base: 0, md: '2.5%' }} mt={{ base: '2.5%', md: 0 }}>
+                  <ContactInformation />
+                  <FileUploadForm />
+                </Box>
+              </Flex>
+              <Footer />
+            </Box>
+          </DndProvider>
         )}
         <FileDownloadListener />
         <ServerLoader />
@@ -55,4 +59,4 @@ const App: FC = () => {
   )
 }
 
-ReactDom.render(<App />, mainElement)
+ReactDOM.render(<App />, mainElement)

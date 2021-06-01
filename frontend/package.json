@@ -67,6 +67,8 @@
     "handlebars-loader": "^1.7.1",
     "randomstring": "^1.1.5",
     "react": "^16.13.1",
+    "react-dnd": "^14.0.2",
+    "react-dnd-html5-backend": "^14.0.0",
     "react-dom": "^16.13.1"
   }
 }

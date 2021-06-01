@@ -11,15 +11,31 @@ import { getConfig } from '../lib/getConfig'
 import { useToast } from '@chakra-ui/toast'
 import { dataPath } from '../lib/setup'
 import { Button } from '@chakra-ui/button'
+import { useDrop } from 'react-dnd'
+import { Contact } from '../lib/types'
 
 const { getCurrentWindow } = require('electron').remote
 
 const FileUploadForm: FC = () => {
   const [filePath, setFilePath] = useState<string | null>(null)
   const [targetId, setTargetId] = useState('')
+  const [targetContact, setTargetContact] = useState<Contact | null>(null)
   const [shareState, setShareState] = useState<'details' | 'starting' | 'uploading' | 'done'>('details')
   const dropRef = useRef<HTMLDivElement>(null)
   const toast = useToast()
+
+  const onDrop = (contact: Contact) => {
+    setTargetContact(contact)
+  }
+
+  const [{ canDrop, isOver }, drop] = useDrop(() => ({
+    accept: 'contact',
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
+    }),
+    drop: onDrop
+  }))
 
   const handleShare = () => {
     setShareState('starting')
@@ -35,7 +51,8 @@ const FileUploadForm: FC = () => {
     if (!filePath) {
       return
     }
-    const clientProcess = spawn('java', ['-jar', config.clientPath, targetId, filePath])
+    const selectedTargetId = targetContact?.name ?? targetId
+    const clientProcess = spawn('java', ['-jar', config.clientPath, selectedTargetId, filePath])
     clientProcess.stdout.on('data', data => {
       console.log(`client: ${data}`)
     })
@@ -70,12 +87,8 @@ const FileUploadForm: FC = () => {
   const handleRestart = () => {
     setFilePath(null)
     setTargetId('')
+    setTargetContact(null)
     setTimeout(() => setShareState('details'), 1500)
-  }
-
-  const handleCancelShare = () => {
-    setShareState('details')
-    setFilePath(null)
   }
 
   return (
@@ -121,22 +134,28 @@ const FileUploadForm: FC = () => {
       <Collapse in={Boolean(filePath)}>
         <Box p='15px' pb='20px' pl='20px'>
           {shareState !== 'done' && (
-            <>
-              <Text mb='5px'>Enter the ID of the person you want to share with</Text>
+            <Box ref={drop} role='Select contact'>
+              <Text mb='5px'>Enter the ID or drag the contact of the person you want to share with</Text>
               <Flex alignItems='center'>
-                <ApplicationInput
-                  type='text'
-                  placeholder='ID'
-                  w='40%'
-                  mr='15px'
-                  value={targetId}
-                  onChange={e => setTargetId(e.target.value)}
-                />
+                {targetContact ? (
+                  <Text mr='15px' fontWeight='bold'>
+                    {targetContact.name}
+                  </Text>
+                ) : (
+                  <ApplicationInput
+                    type='text'
+                    placeholder='ID'
+                    w='40%'
+                    mr='15px'
+                    value={targetId}
+                    onChange={e => setTargetId(e.target.value)}
+                  />
+                )}
                 <ApplicationButton isLoading={shareState !== 'details'} onClick={handleShare}>
                   Share
                 </ApplicationButton>
                 <Button
-                  onClick={handleCancelShare}
+                  onClick={handleRestart}
                   variant='outline'
                   color='white'
                   _hover={{ bg: 'rgba(0, 0, 0, 25%)' }}
@@ -147,7 +166,7 @@ const FileUploadForm: FC = () => {
                 {shareState === 'starting' && <Text ml='15px'>Starting upload...</Text>}
                 {shareState === 'uploading' && <Text ml='15px'>Uploading file...</Text>}
               </Flex>
-            </>
+            </Box>
           )}
           {shareState === 'done' && (
             <Flex alignItems='center'>

@@ -4,17 +4,28 @@ import fs from 'fs'
 import { Contact } from '../lib/types'
 import NewContactButton from './NewContactButton'
 import { contactsPath } from '../lib/setup'
+import { useDrag } from 'react-dnd'
 
 interface ItemProps {
   name: string
   id: string
 }
 
-const ContactItem: FC<ItemProps> = ({ name, id }) => (
-  <Box bg='mono.300' p='10px' borderRadius='5px' mb='10px'>
-    <Text>{name}</Text>
-  </Box>
-)
+const ContactItem: FC<ItemProps> = ({ name, id }) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: 'contact',
+    item: { name, id },
+    collect: monitor => ({
+      isDragging: monitor.isDragging(),
+      handlerId: monitor.getHandlerId()
+    })
+  }))
+  return (
+    <Box bg='mono.300' p='10px' borderRadius='5px' mb='10px' ref={drag} role='contact'>
+      <Text>{name}</Text>
+    </Box>
+  )
+}
 
 const ContactsPanel: FC = () => {
   const [contacts, setContacts] = useState<Contact[]>([])
@@ -33,7 +44,7 @@ const ContactsPanel: FC = () => {
       </Heading>
       <Box m='10px'>
         {contacts.map(contact => (
-          <ContactItem {...contact} />
+          <ContactItem {...contact} key={contact.id} />
         ))}
       </Box>
       <NewContactButton onCreateContact={handleCreateContact} contacts={contacts} />
